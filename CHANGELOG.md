@@ -6,6 +6,38 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Calendar Versioning](https://calver.org/) of
 the following form: YYYY.0M.0D.
 
+## [2026.11.13]
+
+- Wrote test cases for ElevatorKernel
+- Wrote test cases for Elevator
+
+## [2026.11.13]
+
+- Wrote convention and correspondence
+- Implemented Kernel methods
+- Implemented createNewRep and clear
+
+## [2026.11.11]
+
+- Completed ElevatorAbstractClass
+- Edited ElevatorKernel interface
+- Edited Elevator interface
+
+## [2026.11.11]
+
+- Completed ElevatorKernel interface
+- Complete Elevator interface
+
+## [2026.11.11]
+
+- Completed proof of concept assignment
+- Implemented some (but not all) Kernel and Secondary methods in the Elevator.MVP
+  java file
+
+## [2026.11.11]
+
+- Completed component brainstorming assignment
+
 ## [Unreleased]
 
 - Fixed an issue where the course URLs dropped the `web-sw1` paths
