@@ -275,6 +275,7 @@ public abstract class ElevatorSecondary implements Elevator {
         sb.append("Buttons Pressed Inside: ").append(this.getButtonsPressed());
         sb.append("\n");
         sb.append("Requests: ").append(this.getRequests());
+        sb.append("\n");
         sb.append("Top Floor: ").append(this.getTopFloor());
         return sb.toString();
     }

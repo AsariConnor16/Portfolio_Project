@@ -7,6 +7,9 @@ and this project adheres to [Calendar Versioning](https://calver.org/) of
 the following form: YYYY.0M.0D.
 
 ## [2026.11.17]
+ - Created main method that allows interactive use of the Elevator component
+
+## [2026.11.17]
 
 - Added internal variable topFloor used to track the top floor the elevator can
   reach

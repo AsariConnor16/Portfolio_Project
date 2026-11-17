@@ -80,8 +80,11 @@ public class Elevator2 extends ElevatorSecondary {
      * @param top
      *            the value of which to set as the topFloor the elevator can
      *            reach.
+     * @requires 1 <= top
      */
     public Elevator2(int top) {
+        assert 1 <= top : "ERROR: top must be at least 1";
+
         this.createNewRep(); //call create new rep
         this.topFloor = top; //overwrite topFloor
     }
