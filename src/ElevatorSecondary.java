@@ -6,11 +6,10 @@ import components.set.Set;
  *
  * @author Connor Asari
  */
-public abstract class ElevatorAbstractClass implements Elevator {
+public abstract class ElevatorSecondary implements Elevator {
     /**
      * Finds the next floor to which the elevator should travel next.
      *
-     * @requires buttonsPressed /= empty_set || requests /= empty_map
      * @return the next floor to which to travel
      * @ensures findNextFloor = the farthest floor from current in the direction
      *          the elevator is currently travelling that exists in
@@ -30,8 +29,8 @@ public abstract class ElevatorAbstractClass implements Elevator {
 
         //if the elevator is currently travelling up,
         if (d == Direction.UP) {
-            int maxButton = 1; //find the max button pressed (inside the elevator)
-            int maxRequest = 1; //and the max floor requested (outside the elevator)
+            int maxButton = result; //find the max button pressed (inside the elevator)
+            int maxRequest = result; //and the max floor requested (outside the elevator)
 
             //if there are buttons pressed, find the max button pressed
             if (buttons.size() > 0) {
@@ -53,8 +52,8 @@ public abstract class ElevatorAbstractClass implements Elevator {
                 result = this.findNextFloor();
             }
         } else {
-            int minButton = TOP_FLOOR; //find the min button pressed
-            int minRequest = TOP_FLOOR; //find the min floor requested
+            int minButton = result; //find the min button pressed
+            int minRequest = result; //find the min floor requested
 
             //if there are buttons pressed, find the mininimum
             if (buttons.size() > 0) {
@@ -87,12 +86,16 @@ public abstract class ElevatorAbstractClass implements Elevator {
      * @param target
      *            the target floor to which to travel.
      * @updates this
-     * @requires 1 <= target <= TOP_FLOOR
+     * @requires 1 <= target <= topFloor
      * @ensures currentFloor = target && for every floor x between #currentFloor
      *          and target, if x mandates a stop, such stop is made.
      */
     @Override
     public void goToNextFloor(int target) {
+        assert 1 <= target : "Floor must be at least 1";
+        assert target <= this
+                .getTopFloor() : "Floor cannot be greater than topFloor";
+
         //get currentFloor, buttons, and requests
         int current = this.getCurrentFloor();
         Set<Integer> buttons = this.getButtonsPressed();
@@ -134,17 +137,18 @@ public abstract class ElevatorAbstractClass implements Elevator {
     }
 
     /**
-     * 'stops' the elevator at currentFloor. If currentFloor is in
-     * buttonsPressed, it is removed from buttonsPressed. If currentFloor is in
-     * requests and directionTravelling is in the Set<Direction> associated with
-     * currentFloor, directionTravelling is removed from the Set<Direction>.
+     * 'stops' the elevator at its current floor. If {@code currentFloor} is in
+     * buttonsPressed, it is removed from buttonsPressed. If
+     * {@code currentFloor} is in requests and {@code d} is in the
+     * Set<Direction> associated with {@code currentFloor}, {@code d} is removed
+     * from the Set<Direction>.
      *
      * @param d
-     *            the direction the elevator is travelling when the stop is made
+     *            direction the elevator is travelling when the stop is made
      * @updates this
-     * @ensures buttonsPressed.contains(floor) = false &&
-     *          (requests.hasKey(floor) = false ||
-     *          requests.value(floor).contains(d) = false)
+     * @ensures !buttonsPressed.contains(currentFloor) &&
+     *          [!(requests.hasKey(currentFloor) ||
+     *          !requests.value(currentFloor).contains(d)]
      */
     @Override
     public void stop(Direction d) {
@@ -165,7 +169,7 @@ public abstract class ElevatorAbstractClass implements Elevator {
 
     /**
      * Finds the max value in a set where the max value can be no greater than
-     * {@code TOP_FLOOR}.
+     * {@code topFloor}.
      *
      * @param s
      *            the set of which to search
@@ -173,7 +177,9 @@ public abstract class ElevatorAbstractClass implements Elevator {
      * @return the max value in the set
      */
     private int findMaxSet(Set<Integer> s) {
-        int max = TOP_FLOOR;
+        assert s.size() > 0 : "ERROR: set cannot be empty";
+
+        int max = this.getTopFloor();
         while (!s.contains(max) && max > 0) {
             max--;
         }
@@ -189,8 +195,10 @@ public abstract class ElevatorAbstractClass implements Elevator {
      * @return the min value in the set
      */
     private int findMinSet(Set<Integer> s) {
+        assert s.size() > 0 : "ERROR: set cannot be empty";
+
         int min = 1;
-        while (!s.contains(min) && min <= TOP_FLOOR) {
+        while (!s.contains(min) && min <= this.getTopFloor()) {
             min++;
         }
         return min;
@@ -206,7 +214,9 @@ public abstract class ElevatorAbstractClass implements Elevator {
      * @return the max key in the map
      */
     private int findMaxMap(Map<Integer, Set<Direction>> m) {
-        int max = TOP_FLOOR;
+        assert m.size() > 0 : "ERROR: map cannot be empty";
+
+        int max = this.getTopFloor();
         while (!m.hasKey(max) && max > 0) {
             max--;
         }
@@ -222,8 +232,10 @@ public abstract class ElevatorAbstractClass implements Elevator {
      * @return the min key in the map
      */
     private int findMinMap(Map<Integer, Set<Direction>> m) {
+        assert m.size() > 0 : "ERROR: map cannot be empty";
+
         int min = 1;
-        while (!m.hasKey(min) && min <= TOP_FLOOR) {
+        while (!m.hasKey(min) && min <= this.getTopFloor()) {
             min++;
         }
         return min;
@@ -246,7 +258,8 @@ public abstract class ElevatorAbstractClass implements Elevator {
                     && (this.getDirection() == other.getDirection())
                     && (this.getButtonsPressed()
                             .equals(other.getButtonsPressed()))
-                    && (this.getRequests().equals(other.getRequests()));
+                    && (this.getRequests().equals(other.getRequests())
+                            && (this.getTopFloor() == other.getTopFloor()));
         }
 
         return result;
@@ -262,6 +275,7 @@ public abstract class ElevatorAbstractClass implements Elevator {
         sb.append("Buttons Pressed Inside: ").append(this.getButtonsPressed());
         sb.append("\n");
         sb.append("Requests: ").append(this.getRequests());
+        sb.append("Top Floor: ").append(this.getTopFloor());
         return sb.toString();
     }
 }

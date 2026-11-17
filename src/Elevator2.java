@@ -4,11 +4,11 @@ import components.set.Set1L;
 
 /**
  * @convention <pre>
- *   1 <= this.currentFloor && this.currentFloor <= TOP_FLOOR
+ *   1 <= currentFloor <= topFloor
  *   && for all x: integer
- *        (x in this.buttonsPressed => (1 <= x && x <= TOP_FLOOR))
+ *        (x in this.buttonsPressed => (1 <= x <= topFloor))
  *   && for all y: integer
- *        (y in domain(this.requests) => (1 <= y && y <= TOP_FLOOR
+ *        (y in domain(this.requests) => (1 <= y <= topFloor
  *          && this.requests.value(y) /= empty_set))
  * </pre>
  *
@@ -17,6 +17,7 @@ import components.set.Set1L;
      *   && directionTravelling = this.directionTravelling
      *   && buttonsPressed = this.buttonsPressed
      *   && requests = this.requests
+     *   && topFloor = the highest floor that the elevator can reach
      * [this.buttonsPressed is the mathematical set of all floor integers whose
      *  corresponding buttons have been pressed on the interior of the elevator;
      *  and this.requests is a map from floor integers (domain) to non-empty sets
@@ -51,6 +52,11 @@ public class Elevator2 extends ElevatorSecondary {
     private Map1L<Integer, Set<Direction>> requests;
 
     /**
+     * The highest floor to which the elevator can travel.
+     */
+    private int topFloor;
+
+    /**
      * Creator of initial representation.
      */
     private void createNewRep() {
@@ -58,13 +64,26 @@ public class Elevator2 extends ElevatorSecondary {
         this.directionTravelling = Direction.UP;
         this.buttonsPressed = new Set1L<Integer>();
         this.requests = new Map1L<Integer, Set<Direction>>();
+        this.topFloor = 10;
     }
 
     /**
-     * No argument constructor.
+     * No argument constructor. This is the default constructor.
      */
     public Elevator2() {
         this.createNewRep();
+    }
+
+    /**
+     * Constructor that sets {@code topFloor} to the value of {@code top}.
+     *
+     * @param top
+     *            the value of which to set as the topFloor the elevator can
+     *            reach.
+     */
+    public Elevator2(int top) {
+        this.createNewRep(); //call create new rep
+        this.topFloor = top; //overwrite topFloor
     }
 
     @Override
@@ -95,6 +114,7 @@ public class Elevator2 extends ElevatorSecondary {
         this.directionTravelling = localE.directionTravelling;
         this.buttonsPressed = localE.buttonsPressed;
         this.requests = localE.requests;
+        this.topFloor = localE.topFloor;
 
         localE.createNewRep(); //clear localE
     }
@@ -114,14 +134,14 @@ public class Elevator2 extends ElevatorSecondary {
      *
      * @param floor
      *            the floor of which to set currentFloor
-     * @requires 1 <= floor <= TOP_FLOOR
+     * @requires 1 <= floor <= topFloor
      * @updates this
      * @ensures currentFloor = floor
      */
     @Override
     public void setCurrentFloor(int floor) {
         assert 1 <= floor : "Floor must be at least 1";
-        assert floor <= TOP_FLOOR : "Floor cannot be greater than TOP_FLOOR";
+        assert floor <= this.topFloor : "Floor cannot be greater than topFloor";
 
         this.currentFloor = floor;
     }
@@ -152,8 +172,7 @@ public class Elevator2 extends ElevatorSecondary {
     /**
      * Adds {@code floor} to the set of buttons pressed.
      *
-     * @requires 1 <= floor <= TOP_FLOOR
-     * @requires buttonsPressed.contains(floor) = false
+     * @requires [1 <= floor <= topFloor] && [!buttonsPressed.contains(floor)]
      * @updates this
      * @param floor
      *            the floor to add to buttonsPressed
@@ -164,7 +183,7 @@ public class Elevator2 extends ElevatorSecondary {
         assert !this.buttonsPressed
                 .contains(floor) : "Floor has already been pressed";
         assert 1 <= floor : "Floor must be at least 1";
-        assert floor <= TOP_FLOOR : "Floor cannot be greater than TOP_FLOOR";
+        assert floor <= this.topFloor : "Floor cannot be greater than topFloor";
 
         this.buttonsPressed.add(floor);
     }
@@ -172,7 +191,7 @@ public class Elevator2 extends ElevatorSecondary {
     /**
      * Removes {@code floor} from the set of buttons pressed.
      *
-     * @requires buttonsPressed.contains(floor) = true
+     * @requires buttonsPressed.contains(floor)
      * @updates this
      * @param floor
      *            the floor to remove from buttonsPressed
@@ -204,8 +223,8 @@ public class Elevator2 extends ElevatorSecondary {
      *            the floor requested
      * @param d
      *            the direction requested
-     * @requires 1 <= floor <= TOP_FLOOR && (requests.hasKey(floor) = false ||
-     *           requests.value(floor).contains(d) = false)
+     * @requires 1 <= floor <= topFloor && [!requests.hasKey(floor) ||
+     *           !requests.value(floor).contains(d))]
      * @updates this
      * @ensures if floor is already in the domain of requests, add d to its
      *          associated Set<Direction>. Otherwise, add {(floor, {d})} to
@@ -214,7 +233,7 @@ public class Elevator2 extends ElevatorSecondary {
     @Override
     public void makeRequest(int floor, Direction d) {
         assert 1 <= floor : "Floor must be at least 1";
-        assert floor <= TOP_FLOOR : "Floor cannot be greater than TOP_FLOOR";
+        assert floor <= this.topFloor : "Floor cannot be greater than topFloor";
         assert !this.requests.hasKey(floor)
                 || !this.requests.value(floor).contains(
                         d) : "A request for this floor and direciton already exists";
@@ -267,5 +286,15 @@ public class Elevator2 extends ElevatorSecondary {
     @Override
     public Map1L<Integer, Set<Direction>> getRequests() {
         return this.requests;
+    }
+
+    /**
+     * Returns the topFloor.
+     *
+     * @return topFloor
+     */
+    @Override
+    public int getTopFloor() {
+        return this.topFloor;
     }
 }

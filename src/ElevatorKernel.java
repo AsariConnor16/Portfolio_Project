@@ -13,12 +13,14 @@ import components.standard.Standard;
  *   directionTravelling: Direction
  *   buttonsPressed: set of integer
  *   requests: map of integer and set of Direction
+ *   topFloor: integer
  * }
  * @init {@code
  *   currentFloor = 1
  *   directionTravelling = UP
  *   buttonsPressed = {}
  *   requests = empty_map
+ *   topFloor = 10
  * }
  *
  * @author Connor Asari
@@ -26,15 +28,13 @@ import components.standard.Standard;
 public interface ElevatorKernel extends Standard<Elevator> {
     /**
      * Direction of an elevator request or movement.
+     *
+     * @UP corresponds to the elevator's current diretion being up
+     * @DOWN corresponds to the elevator's current direction being down
      */
     enum Direction {
         UP, DOWN
     }
-
-    /**
-     * A constant used to denote the top floor that the elevator can reach.
-     */
-    int TOP_FLOOR = 10;
 
     /**
      * Returns the current floor that the elevator is on.
@@ -48,7 +48,7 @@ public interface ElevatorKernel extends Standard<Elevator> {
      *
      * @param floor
      *            the floor of which to set currentFloor
-     * @requires 1 <= floor <= TOP_FLOOR
+     * @requires 1 <= floor <= topFloor
      * @updates this
      * @ensures currentFloor = floor
      */
@@ -74,8 +74,8 @@ public interface ElevatorKernel extends Standard<Elevator> {
     /**
      * Adds {@code floor} to the set of buttons pressed.
      *
-     * @requires 1 <= floor <= TOP_FLOOR
-     * @requires buttonsPressed.contains(floor) = false
+     * @requires 1 <= floor <= topFloor
+     * @requires !buttonsPressed.contains(floor)
      * @updates this
      * @param floor
      *            the floor to add to buttonsPressed
@@ -86,7 +86,7 @@ public interface ElevatorKernel extends Standard<Elevator> {
     /**
      * Removes {@code floor} from the set of buttons pressed.
      *
-     * @requires buttonsPressed.contains(floor) = true
+     * @requires buttonsPressed.contains(floor)
      * @updates this
      * @param floor
      *            the floor to remove from buttonsPressed
@@ -109,8 +109,8 @@ public interface ElevatorKernel extends Standard<Elevator> {
      *            the floor requested
      * @param d
      *            the direction requested
-     * @requires 1 <= floor <= TOP_FLOOR && (requests.hasKey(floor) = false ||
-     *           requests.value(floor).contains(d) = false)
+     * @requires 1 <= floor <= topFloor && [!requests.hasKey(floor) ||
+     *           !requests.value(floor).contains(d)]
      * @updates this
      * @ensures if floor is already in the domain of requests, add d to its
      *          associated Set<Direction>. Otherwise, add {(floor, {d})} to
@@ -127,8 +127,7 @@ public interface ElevatorKernel extends Standard<Elevator> {
      *            the floor whose Set<Direction> at which to look
      * @param d
      *            the direction to remove
-     * @requires requests.contains(floor) = true &&
-     *           requests.value(floor).contains(d)
+     * @requires requests.contains(floor) && requests.value(floor).contains(d)
      * @updates this
      * @ensures if #requests.value(floor) = {d} then requests = #requests
      *          without key floor else requests = #requests with value(floor)
@@ -142,4 +141,11 @@ public interface ElevatorKernel extends Standard<Elevator> {
      * @return requests
      */
     Map<Integer, Set<Direction>> getRequests();
+
+    /**
+     * Returns the topFloor.
+     *
+     * @return topFloor
+     */
+    int getTopFloor();
 }

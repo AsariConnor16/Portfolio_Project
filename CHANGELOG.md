@@ -8,6 +8,14 @@ the following form: YYYY.0M.0D.
 
 ## [2026.11.17]
 
+- Added internal variable topFloor used to track the top floor the elevator can
+  reach
+- Added a constructor so user can specify a top floor (it was originally hard-coded
+  as 10)
+- Edited all interfaces and classes to reflect the change
+
+## [2026.11.17]
+
 - Removed null checks from convention
 - Edited transferFrom so that it directly looks at internal variables rather
   than calling Kernel methods to accomplish the same task
