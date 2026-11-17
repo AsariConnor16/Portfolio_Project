@@ -5,14 +5,10 @@ import components.set.Set1L;
 /**
  * @convention <pre>
  *   1 <= this.currentFloor && this.currentFloor <= TOP_FLOOR
- *   && this.directionTravelling /= null
- *   && this.buttonsPressed /= null
- *   && this.requests /= null
  *   && for all x: integer
  *        (x in this.buttonsPressed => (1 <= x && x <= TOP_FLOOR))
  *   && for all y: integer
  *        (y in domain(this.requests) => (1 <= y && y <= TOP_FLOOR
- *          && this.requests.value(y) /= null
  *          && this.requests.value(y) /= empty_set))
  * </pre>
  *
@@ -31,7 +27,7 @@ import components.set.Set1L;
  * @author Connor Asari
  */
 
-public class Elevator2 extends ElevatorAbstractClass {
+public class Elevator2 extends ElevatorSecondary {
     /**
      * The current floor of the elevator.
      */
@@ -64,6 +60,9 @@ public class Elevator2 extends ElevatorAbstractClass {
         this.requests = new Map1L<Integer, Set<Direction>>();
     }
 
+    /**
+     * No argument constructor.
+     */
     public Elevator2() {
         this.createNewRep();
     }
@@ -92,10 +91,10 @@ public class Elevator2 extends ElevatorAbstractClass {
         Elevator2 localE = (Elevator2) e; //cast e as an instance of Elevator2
 
         //set all internal variables of this equal to those of localE
-        this.currentFloor = localE.getCurrentFloor();
-        this.directionTravelling = localE.getDirection();
-        this.buttonsPressed = localE.getButtonsPressed();
-        this.requests = localE.getRequests();
+        this.currentFloor = localE.currentFloor;
+        this.directionTravelling = localE.directionTravelling;
+        this.buttonsPressed = localE.buttonsPressed;
+        this.requests = localE.requests;
 
         localE.createNewRep(); //clear localE
     }

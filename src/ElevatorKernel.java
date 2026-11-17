@@ -37,7 +37,7 @@ public interface ElevatorKernel extends Standard<Elevator> {
     int TOP_FLOOR = 10;
 
     /**
-     * /** Returns the current floor that the elevator is on.
+     * Returns the current floor that the elevator is on.
      *
      * @return the current floor of the elevator
      */
