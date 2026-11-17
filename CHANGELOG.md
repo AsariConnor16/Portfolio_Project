@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Calendar Versioning](https://calver.org/) of
 the following form: YYYY.0M.0D.
 
+## [2026.11.17]
+
+- Removed null checks from convention
+- Edited transferFrom so that it directly looks at internal variables rather
+  than calling Kernel methods to accomplish the same task
+- Renamed ElevatorAbstractClass to ElevatorSecondary to follow OSU naming conventions
+
 ## [2026.11.13]
 
 - Wrote test cases for ElevatorKernel
