@@ -45,9 +45,9 @@ public abstract class ElevatorKernelTest {
     @Test
     public final void testCurrentFloorTopFloor() {
         Elevator x = this.constructorTest();
-        x.setCurrentFloor(Elevator.TOP_FLOOR);
+        x.setCurrentFloor(x.getTopFloor());
 
-        assertEquals(Elevator.TOP_FLOOR, x.getCurrentFloor());
+        assertEquals(x.getTopFloor(), x.getCurrentFloor());
     }
 
     @Test
@@ -109,9 +109,9 @@ public abstract class ElevatorKernelTest {
         Elevator x = this.constructorTest();
 
         Set<Integer> expected = new Set1L();
-        expected.add(Elevator.TOP_FLOOR);
+        expected.add(x.getTopFloor());
 
-        x.pressButton(Elevator.TOP_FLOOR);
+        x.pressButton(x.getTopFloor());
 
         assertEquals(expected, x.getButtonsPressed());
     }

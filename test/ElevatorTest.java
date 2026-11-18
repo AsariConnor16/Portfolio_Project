@@ -17,11 +17,11 @@ public abstract class ElevatorTest extends ElevatorKernelTest {
     public final void testFindNextFloorOneButton() {
         Elevator x = this.constructorTest();
 
-        x.pressButton(Elevator.TOP_FLOOR);
+        x.pressButton(x.getTopFloor());
 
         int result = x.findNextFloor();
 
-        assertEquals(Elevator.TOP_FLOOR, result);
+        assertEquals(x.getTopFloor(), result);
     }
 
     /**
@@ -47,7 +47,7 @@ public abstract class ElevatorTest extends ElevatorKernelTest {
     @Test
     public final void testFindNextFloor1ButtonDown() {
         Elevator x = this.constructorTest();
-        x.setCurrentFloor(Elevator.TOP_FLOOR);
+        x.setCurrentFloor(x.getTopFloor());
         x.setDirection(Elevator.Direction.DOWN);
 
         x.pressButton(1);
@@ -64,7 +64,7 @@ public abstract class ElevatorTest extends ElevatorKernelTest {
     @Test
     public final void testFindNextFloor2ButtonsDown() {
         Elevator x = this.constructorTest();
-        x.setCurrentFloor(Elevator.TOP_FLOOR);
+        x.setCurrentFloor(x.getTopFloor());
         x.setDirection(Elevator.Direction.DOWN);
 
         x.pressButton(2);
@@ -116,11 +116,11 @@ public abstract class ElevatorTest extends ElevatorKernelTest {
         x.setCurrentFloor(2);
 
         x.pressButton(1);
-        x.pressButton(Elevator.TOP_FLOOR);
+        x.pressButton(x.getTopFloor());
 
         int result = x.findNextFloor();
 
-        assertEquals(Elevator.TOP_FLOOR, result);
+        assertEquals(x.getTopFloor(), result);
     }
 
     /**
@@ -134,7 +134,7 @@ public abstract class ElevatorTest extends ElevatorKernelTest {
         x.setCurrentFloor(8);
 
         x.pressButton(1);
-        x.pressButton(Elevator.TOP_FLOOR);
+        x.pressButton(x.getTopFloor());
 
         int result = x.findNextFloor();
 
@@ -198,7 +198,7 @@ public abstract class ElevatorTest extends ElevatorKernelTest {
     @Test
     public final void testFindNextFloor1RequestDown() {
         Elevator x = this.constructorTest();
-        x.setCurrentFloor(Elevator.TOP_FLOOR);
+        x.setCurrentFloor(x.getTopFloor());
 
         x.makeRequest(1, Elevator.Direction.UP);
 

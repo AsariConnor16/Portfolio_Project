@@ -29,8 +29,8 @@ public abstract class ElevatorSecondary implements Elevator {
 
         //if the elevator is currently travelling up,
         if (d == Direction.UP) {
-            int maxButton = result; //find the max button pressed (inside the elevator)
-            int maxRequest = result; //and the max floor requested (outside the elevator)
+            int maxButton = 1; //find the max button pressed (inside the elevator)
+            int maxRequest = 1; //and the max floor requested (outside the elevator)
 
             //if there are buttons pressed, find the max button pressed
             if (buttons.size() > 0) {
@@ -52,8 +52,8 @@ public abstract class ElevatorSecondary implements Elevator {
                 result = this.findNextFloor();
             }
         } else {
-            int minButton = result; //find the min button pressed
-            int minRequest = result; //find the min floor requested
+            int minButton = this.getTopFloor(); //find the min button pressed
+            int minRequest = this.getTopFloor(); //find the min floor requested
 
             //if there are buttons pressed, find the mininimum
             if (buttons.size() > 0) {
