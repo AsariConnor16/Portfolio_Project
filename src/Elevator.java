@@ -1,0 +1,51 @@
+/**
+ * {@code Elevator} enhanced with secondary methods.
+ *
+ * @author Connor Asari
+ */
+public interface Elevator extends ElevatorKernel {
+    /**
+     * Finds the next floor to which the elevator should travel next.
+     *
+     * @return the next floor to which to travel
+     * @ensures IF buttonsPressed is not empty OR requests is not empty,
+     *          findNextFloor = the farthest floor from current in the direction
+     *          the elevator is currently travelling that exists in
+     *          buttonsPressed or requests. If no such value exists,
+     *          findNextFloor = the farthest floor from current in the opposite
+     *          direction the elevator is currently travelling. ELSE
+     *          findNextFloor = currentFloor
+     */
+    int findNextFloor();
+
+    /**
+     * Moves the elevator to floor {@code target}, making stops along the way at
+     * each intermediate floor, if that floor is contained in buttonsPressed or
+     * contained in requests, given that the value in requests corresponding to
+     * that floor contains the direction the elevator is currently travelling.
+     *
+     * @param target
+     *            the target floor to which to travel.
+     * @updates this
+     * @requires 1 <= target <= topFloor
+     * @ensures currentFloor = target && for every floor x between #currentFloor
+     *          and target, if x mandates a stop, such stop is made.
+     */
+    void goToNextFloor(int target);
+
+    /**
+     * 'stops' the elevator at its current floor. If {@code currentFloor} is in
+     * buttonsPressed, it is removed from buttonsPressed. If
+     * {@code currentFloor} is in requests and {@code d} is in the
+     * Set<Direction> associated with {@code currentFloor}, {@code d} is removed
+     * from the Set<Direction>.
+     *
+     * @param d
+     *            direction the elevator is travelling when the stop is made
+     * @updates this
+     * @ensures !buttonsPressed.contains(currentFloor) &&
+     *          [!(requests.hasKey(currentFloor) ||
+     *          !requests.value(currentFloor).contains(d)]
+     */
+    void stop(Direction d);
+}
