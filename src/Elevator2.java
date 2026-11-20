@@ -57,6 +57,11 @@ public class Elevator2 extends ElevatorSecondary {
     private int topFloor;
 
     /**
+     * The number of floors the elevator has travelled.
+     */
+    private int floorsTravelled;
+
+    /**
      * Creator of initial representation.
      */
     private void createNewRep() {
@@ -65,6 +70,7 @@ public class Elevator2 extends ElevatorSecondary {
         this.buttonsPressed = new Set1L<Integer>();
         this.requests = new Map1L<Integer, Set<Direction>>();
         this.topFloor = 10;
+        this.floorsTravelled = 0;
     }
 
     /**
@@ -299,5 +305,26 @@ public class Elevator2 extends ElevatorSecondary {
     @Override
     public int getTopFloor() {
         return this.topFloor;
+    }
+
+    /**
+     * Returns the floors travelled by the elevator.
+     *
+     * @return the floors travelled by the elevator
+     */
+    @Override
+    public int getFloorsTravelled() {
+        return this.floorsTravelled;
+    }
+
+    /**
+     * Increments floorsTravelled.
+     *
+     * @updates this
+     * @ensures floorsTravlled = #floorsTravlled + 1
+     */
+    @Override
+    public void incrementFloorsTravelled() {
+        this.floorsTravelled++;
     }
 }

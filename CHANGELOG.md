@@ -10,6 +10,10 @@ the following form: YYYY.0M.0D.
 
 - Added alternate implementations for findNextFloor and goToFloor in Elevator.java
   and ElevatorSecondary.java
+- Added internal variable floorsTravelled to Elevator.
+- Added getFloorsTravelled and incrementFloorsTravelled to Kernel
+- Created Diagnostics.java file to compare the efficiencies of the different
+  implementations
 
 ## [2026.11.20]
 

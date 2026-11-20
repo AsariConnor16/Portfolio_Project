@@ -10,6 +10,34 @@ import components.set.Set1L;
 public abstract class ElevatorTest extends ElevatorKernelTest {
 
     /**
+     * Test findNextFloor when elevator is on floor 5, travelling up, and no
+     * buttons are pressed.
+     */
+    @Test
+    public final void testFindNextFloorNoButtonsFloor5() {
+        Elevator x = this.constructorTest();
+        x.setCurrentFloor(5);
+
+        int result = x.findNextFloor();
+
+        assertEquals(5, result);
+    }
+
+    /**
+     * Test findNextFloorArcher when elevator is on floor 5, travelling up, and
+     * no buttons are pressed.
+     */
+    @Test
+    public final void testFindNextFloorArcherNoButtonsFloor5() {
+        Elevator x = this.constructorTest();
+        x.setCurrentFloor(5);
+
+        int result = x.findNextFloorArcher();
+
+        assertEquals(1, result);
+    }
+
+    /**
      * Test findNextFloor when elevator is on floor 1, travelling up, and the
      * only button TOP_FLOOR is pressed.
      */

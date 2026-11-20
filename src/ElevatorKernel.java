@@ -14,6 +14,7 @@ import components.standard.Standard;
  *   buttonsPressed: set of integer
  *   requests: map of integer and set of Direction
  *   topFloor: integer
+ *   floorsTravelled : integer
  * }
  * @init {@code
  *   currentFloor = 1
@@ -21,6 +22,7 @@ import components.standard.Standard;
  *   buttonsPressed = {}
  *   requests = empty_map
  *   topFloor = 10
+ *   floorsTravelled = 0;
  * }
  *
  * @author Connor Asari
@@ -148,4 +150,19 @@ public interface ElevatorKernel extends Standard<Elevator> {
      * @return topFloor
      */
     int getTopFloor();
+
+    /**
+     * Returns the floors travelled by the elevator.
+     *
+     * @return the floors travelled by the elevator
+     */
+    int getFloorsTravelled();
+
+    /**
+     * Increments floorsTravelled.
+     *
+     * @updates this
+     * @ensures floorsTravlled = #floorsTravlled + 1
+     */
+    void incrementFloorsTravelled();
 }

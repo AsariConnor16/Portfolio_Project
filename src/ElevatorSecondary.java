@@ -71,7 +71,7 @@ public abstract class ElevatorSecondary implements Elevator {
                 //set result as the lower of the 2 values
                 result = Math.min(minButton, minRequest);
 
-                //if result is a higher flor than current, then the elevator must
+                //if result is a higher floor than current, then the elevator must
                 //travel up. Recursive call with Direction=UP
                 if (result > this.getCurrentFloor()) {
                     this.setDirection(Direction.UP); //reverse the elevator's direction
@@ -187,7 +187,8 @@ public abstract class ElevatorSecondary implements Elevator {
             //while we haven't yet reached the target floor
             while (current != target) {
                 current++; //increment the floor
-                this.setCurrentFloor(current); //adjust internal variable
+                this.setCurrentFloor(current); //adjust internal variables
+                this.incrementFloorsTravelled();
 
                 //if the elevator needs to make a stop,
                 if (buttons.contains(current) || (requests.hasKey(current)
@@ -201,7 +202,8 @@ public abstract class ElevatorSecondary implements Elevator {
             //while we haven't yet reached the target floor
             while (current != target) {
                 current--; //decrement the floor
-                this.setCurrentFloor(current); //adjust internal variable
+                this.setCurrentFloor(current); //adjust internal variables
+                this.incrementFloorsTravelled();
 
                 //if the elevator needs to make a stop
                 if (buttons.contains(current) || (requests.hasKey(current)
@@ -246,7 +248,8 @@ public abstract class ElevatorSecondary implements Elevator {
             //while we haven't yet reached the target floor
             while (current != target) {
                 current++; //increment the floor
-                this.setCurrentFloor(current); //adjust internal variable
+                this.setCurrentFloor(current); //adjust internal variables
+                this.incrementFloorsTravelled();
 
                 //if the elevator needs to make a stop,
                 if (buttons.contains(current) || requests.hasKey(current)) {
@@ -259,7 +262,8 @@ public abstract class ElevatorSecondary implements Elevator {
             //while we haven't yet reached the target floor
             while (current != target) {
                 current--; //decrement the floor
-                this.setCurrentFloor(current); //adjust internal variable
+                this.setCurrentFloor(current); //adjust internal variables
+                this.incrementFloorsTravelled();
 
                 //if the elevator needs to make a stop
                 if (buttons.contains(current) || (requests.hasKey(current)
@@ -397,7 +401,9 @@ public abstract class ElevatorSecondary implements Elevator {
                     && (this.getButtonsPressed()
                             .equals(other.getButtonsPressed()))
                     && (this.getRequests().equals(other.getRequests())
-                            && (this.getTopFloor() == other.getTopFloor()));
+                            && (this.getTopFloor() == other.getTopFloor())
+                            && (this.getFloorsTravelled() == other
+                                    .getFloorsTravelled()));
         }
 
         return result;
@@ -415,6 +421,8 @@ public abstract class ElevatorSecondary implements Elevator {
         sb.append("Requests: ").append(this.getRequests());
         sb.append("\n");
         sb.append("Top Floor: ").append(this.getTopFloor());
+        sb.append("\n");
+        sb.append("Floors Travelled: ").append(this.getFloorsTravelled());
         return sb.toString();
     }
 }
