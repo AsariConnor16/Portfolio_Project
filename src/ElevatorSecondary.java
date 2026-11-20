@@ -83,6 +83,81 @@ public abstract class ElevatorSecondary implements Elevator {
     }
 
     /**
+     * Finds the next floor to which the elevator should travel next.
+     *
+     * @return the next floor to which to travel
+     * @ensures IF buttonsPressed is not empty OR requests is not empty,
+     *          findNextFloor = the farthest floor from current in the direction
+     *          the elevator is currently travelling that exists in
+     *          buttonsPressed or requests. If no such value exists,
+     *          findNextFloor = the farthest floor from current in the opposite
+     *          direction the elevator is currently travelling. ELSE
+     *          findNextFloor = 1
+     */
+    @Override
+    public int findNextFloorArcher() {
+        //assume the elevator should go to floor 1
+        int result = 1;
+
+        //get buttons pressed, requests, and direction
+        Set<Integer> buttons = this.getButtonsPressed();
+        Map<Integer, Set<Direction>> requests = this.getRequests();
+        Direction d = this.getDirection();
+
+        //if there are any buttons pressed or active requests
+        if (buttons.size() > 0 || requests.size() > 0) {
+            //if the elevator is currently travelling up,
+            if (d == Direction.UP) {
+                int maxButton = 1; //find the max button pressed (inside the elevator)
+                int maxRequest = 1; //and the max floor requested (outside the elevator)
+
+                //if there are buttons pressed, find the max button pressed
+                if (buttons.size() > 0) {
+                    maxButton = this.findMaxSet(buttons);
+                }
+
+                //if there are requests made, find the max floor that is being requested
+                if (requests.size() > 0) {
+                    maxRequest = this.findMaxMap(requests);
+                }
+
+                //set result as the higher of the 2 values
+                result = Math.max(maxButton, maxRequest);
+
+                //if result is a lower floor than current, then the elevator must
+                //travel down. Recursive call with Direction=DOWN
+                if (result < this.getCurrentFloor()) {
+                    this.setDirection(Direction.DOWN); //reverse the elevator's direction
+                    result = this.findNextFloor();
+                }
+            } else {
+                int minButton = this.getTopFloor(); //find the min button pressed
+                int minRequest = this.getTopFloor(); //find the min floor requested
+
+                //if there are buttons pressed, find the mininimum
+                if (buttons.size() > 0) {
+                    minButton = this.findMinSet(buttons);
+                }
+                //if there are any active requests, find the minimum floor requested
+                if (requests.size() > 0) {
+                    minRequest = this.findMinMap(requests);
+                }
+
+                //set result as the lower of the 2 values
+                result = Math.min(minButton, minRequest);
+
+                //if result is a higher flor than current, then the elevator must
+                //travel up. Recursive call with Direction=UP
+                if (result > this.getCurrentFloor()) {
+                    this.setDirection(Direction.UP); //reverse the elevator's direction
+                    result = this.findNextFloor();
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
      * Moves the elevator to floor {@code target}, making stops along the way at
      * each intermediate floor, if that floor is contained in buttonsPressed or
      * contained in requests, given that the value in requests corresponding to
@@ -117,6 +192,64 @@ public abstract class ElevatorSecondary implements Elevator {
                 //if the elevator needs to make a stop,
                 if (buttons.contains(current) || (requests.hasKey(current)
                         && requests.value(current).contains(Direction.UP))) {
+                    //make a stop at the current floor
+                    this.stop(this.getDirection());
+                }
+            }
+        } else {
+            this.setDirection(Direction.DOWN);
+            //while we haven't yet reached the target floor
+            while (current != target) {
+                current--; //decrement the floor
+                this.setCurrentFloor(current); //adjust internal variable
+
+                //if the elevator needs to make a stop
+                if (buttons.contains(current) || (requests.hasKey(current)
+                        && requests.value(current).contains(Direction.DOWN))) {
+                    //make a stop at the current floor
+                    this.stop(this.getDirection());
+                }
+            }
+        }
+        //now, we've reached our target floor
+        this.stop(Direction.UP);
+        this.stop(Direction.DOWN);
+    }
+
+    /**
+     * Moves the elevator to floor {@code target}, making stops along the way at
+     * each intermediate floor, if that floor is contained in buttonsPressed or
+     * contained in requests, given that the value in requests corresponding to
+     * that floor contains the direction the elevator is currently travelling.
+     *
+     * @param target
+     *            the target floor to which to travel.
+     * @updates this
+     * @requires 1 <= target <= topFloor
+     * @ensures currentFloor = target && for every floor x between #currentFloor
+     *          and target, if x mandates a stop, such stop is made.
+     */
+    @Override
+    public void goToNextFloorDreese(int target) {
+        assert 1 <= target : "Floor must be at least 1";
+        assert target <= this
+                .getTopFloor() : "Floor cannot be greater than topFloor";
+
+        //get currentFloor, buttons, and requests
+        int current = this.getCurrentFloor();
+        Set<Integer> buttons = this.getButtonsPressed();
+        Map<Integer, Set<Direction>> requests = this.getRequests();
+
+        //if we need to travel up to get to target,
+        if (current < target) {
+            this.setDirection(Direction.UP);
+            //while we haven't yet reached the target floor
+            while (current != target) {
+                current++; //increment the floor
+                this.setCurrentFloor(current); //adjust internal variable
+
+                //if the elevator needs to make a stop,
+                if (buttons.contains(current) || requests.hasKey(current)) {
                     //make a stop at the current floor
                     this.stop(this.getDirection());
                 }

@@ -8,6 +8,11 @@ the following form: YYYY.0M.0D.
 
 ## [2026.11.20]
 
+- Added alternate implementations for findNextFloor and goToFloor in Elevator.java
+  and ElevatorSecondary.java
+
+## [2026.11.20]
+
 - Edited findNextFloor so it handles the case where both buttonsPressed and
   requests are empty
 
