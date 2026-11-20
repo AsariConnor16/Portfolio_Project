@@ -7,6 +7,7 @@ public interface Elevator extends ElevatorKernel {
     /**
      * Finds the next floor to which the elevator should travel next.
      *
+     * @requires this.buttonsPressed /= empty set || this.requests /= empty map
      * @return the next floor to which to travel
      * @ensures IF buttonsPressed is not empty OR requests is not empty,
      *          findNextFloor = the farthest floor from current in the direction

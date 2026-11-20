@@ -14,7 +14,7 @@ public class Main {
      * to travel, then travels to that floor (making stops along the way if
      * necessary), and updates the active buttons pressed and requests
      * accordingly. Then, the program asks the user if they want to continue
-     * modeling the elevator, if yes, the process of asking for buttons and
+     * modeling the elevator. If yes, the process of asking for buttons and
      * requests begins again, this time the elevator's current state carries
      * over from the end of the previous loop iteration.
      *
@@ -25,9 +25,9 @@ public class Main {
         SimpleWriter out = new SimpleWriter1L();
 
         out.println("Let's model an elevator!");
-        out.print("What floor would you like to set as the top floor?");
+        out.print("What floor would you like to set as the top floor? ");
         out.println(
-                "Elevator will be able to travel to any floors between 1 and topFloor.");
+                "Elevator will be able to travel to any floors between 1 and top floor.");
 
         int top = Integer.parseInt(in.nextLine());
 
@@ -90,10 +90,17 @@ public class Main {
 
             //evaluate the next floor to which the elevator will travel and print
             //it to the user
-            int nextFloor = e.findNextFloor();
-            out.println("Elevator will travel " + e.getDirection()
-                    + " to floor " + nextFloor
-                    + ", making stops along the way if necessary");
+            int nextFloor = e.getCurrentFloor();
+            if (e.getButtonsPressed().size() > 0
+                    || e.getRequests().size() > 0) {
+                nextFloor = e.findNextFloor();
+                out.println("Elevator will travel " + e.getDirection()
+                        + " to floor " + nextFloor
+                        + ", making stops along the way if necessary");
+            } else {
+                out.println(
+                        "Elevator will stay on floor " + e.getCurrentFloor());
+            }
 
             //move the elevator to previously evaluated nextFloor, then
             //print the new active buttons pressed and requests again

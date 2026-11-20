@@ -6,8 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Calendar Versioning](https://calver.org/) of
 the following form: YYYY.0M.0D.
 
+## [2026.11.20]
+
+- Edited findNextFloor so it handles the case where both buttonsPressed and
+  requests are empty
+
 ## [2026.11.17]
  - Created main method that allows interactive use of the Elevator component
+ - Added descriptive comments to main method
 
 ## [2026.11.17]
 
