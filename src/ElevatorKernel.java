@@ -1,6 +1,7 @@
 //package components.naturalnumber;
 
 import components.map.Map;
+import components.sequence.Sequence;
 import components.set.Set;
 import components.standard.Standard;
 
@@ -15,6 +16,7 @@ import components.standard.Standard;
  *   requests: map of integer and set of Direction
  *   topFloor: integer
  *   floorsTravelled : integer
+ *   responseTimes : Sequence of integer
  * }
  * @init {@code
  *   currentFloor = 1
@@ -22,7 +24,8 @@ import components.standard.Standard;
  *   buttonsPressed = {}
  *   requests = empty_map
  *   topFloor = 10
- *   floorsTravelled = 0;
+ *   floorsTravelled = 0
+ *   responseTimes = <>
  * }
  *
  * @author Connor Asari
@@ -165,4 +168,19 @@ public interface ElevatorKernel extends Standard<Elevator> {
      * @ensures floorsTravlled = #floorsTravlled + 1
      */
     void incrementFloorsTravelled();
+
+    /**
+     * Returns the reponse times of the elevator.
+     *
+     * @return responseTimes
+     */
+    Sequence<Integer> getResponseTimes();
+
+    /**
+     * Adds floor floorsTravelled to the end of responseTimes
+     *
+     * @param floor
+     *            the floor to add to responseTimes
+     */
+    void addToResponseTimes(int floor);
 }

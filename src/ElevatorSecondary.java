@@ -301,11 +301,17 @@ public abstract class ElevatorSecondary implements Elevator {
         //if buttons contains floor, remove it
         if (buttons.contains(floor)) {
             this.unpressButton(floor);
+
+            //add floor and its response time to responseTimes
+            this.addToResponseTimes(floor);
         }
         //if requests contains floor and its Set<Direction> contains d,
         if (requests.hasKey(floor) && requests.value(floor).contains(d)) {
             //remove d from the Set<Direction>
             this.unmakeRequest(floor, d);
+
+            //add floor and its response time to responseTimes
+            this.addToResponseTimes(floor);
         }
     }
 
@@ -403,7 +409,9 @@ public abstract class ElevatorSecondary implements Elevator {
                     && (this.getRequests().equals(other.getRequests())
                             && (this.getTopFloor() == other.getTopFloor())
                             && (this.getFloorsTravelled() == other
-                                    .getFloorsTravelled()));
+                                    .getFloorsTravelled())
+                            && (this.getResponseTimes()
+                                    .equals(other.getResponseTimes())));
         }
 
         return result;
@@ -423,6 +431,8 @@ public abstract class ElevatorSecondary implements Elevator {
         sb.append("Top Floor: ").append(this.getTopFloor());
         sb.append("\n");
         sb.append("Floors Travelled: ").append(this.getFloorsTravelled());
+        sb.append("\n");
+        sb.append("Response Times: ").append(this.getResponseTimes());
         return sb.toString();
     }
 }

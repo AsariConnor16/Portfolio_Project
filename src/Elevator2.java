@@ -1,4 +1,6 @@
 import components.map.Map1L;
+import components.sequence.Sequence;
+import components.sequence.Sequence1L;
 import components.set.Set;
 import components.set.Set1L;
 
@@ -62,6 +64,11 @@ public class Elevator2 extends ElevatorSecondary {
     private int floorsTravelled;
 
     /**
+     * Pairs of floors and the floorsTravelled at the time of un-pressing.
+     */
+    private Sequence<Integer> responseTimes;
+
+    /**
      * Creator of initial representation.
      */
     private void createNewRep() {
@@ -71,6 +78,7 @@ public class Elevator2 extends ElevatorSecondary {
         this.requests = new Map1L<Integer, Set<Direction>>();
         this.topFloor = 10;
         this.floorsTravelled = 0;
+        this.responseTimes = new Sequence1L();
     }
 
     /**
@@ -124,6 +132,8 @@ public class Elevator2 extends ElevatorSecondary {
         this.buttonsPressed = localE.buttonsPressed;
         this.requests = localE.requests;
         this.topFloor = localE.topFloor;
+        this.floorsTravelled = localE.floorsTravelled;
+        this.responseTimes = localE.responseTimes;
 
         localE.createNewRep(); //clear localE
     }
@@ -326,5 +336,27 @@ public class Elevator2 extends ElevatorSecondary {
     @Override
     public void incrementFloorsTravelled() {
         this.floorsTravelled++;
+    }
+
+    /**
+     * Returns the reponse times of the elevator.
+     *
+     * @return responseTimes
+     */
+    @Override
+    public Sequence<Integer> getResponseTimes() {
+        return this.responseTimes;
+    }
+
+    /**
+     * Adds floor floorsTravelled to the end of responseTimes
+     *
+     * @param floor
+     *            the floor to add to responseTimes
+     */
+    public void addToResponseTimes(int floor) {
+        this.responseTimes.add(this.responseTimes.length(), floor);
+        this.responseTimes.add(this.responseTimes.length(),
+                this.floorsTravelled);
     }
 }
