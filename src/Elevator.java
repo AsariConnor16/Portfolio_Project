@@ -9,10 +9,10 @@ public interface Elevator extends ElevatorKernel {
      *
      * @return the next floor to which to travel
      * @ensures IF buttonsPressed is not empty OR requests is not empty,
-     *          findNextFloor = the farthest floor from current in the direction
+     *          findNextFloor = the closest floor from current in the direction
      *          the elevator is currently travelling that exists in
      *          buttonsPressed or requests. If no such value exists,
-     *          findNextFloor = the farthest floor from current in the opposite
+     *          findNextFloor = the closest floor from current in the opposite
      *          direction the elevator is currently travelling. ELSE
      *          findNextFloor = currentFloor
      */
@@ -23,20 +23,18 @@ public interface Elevator extends ElevatorKernel {
      *
      * @return the next floor to which to travel
      * @ensures IF buttonsPressed is not empty OR requests is not empty,
-     *          findNextFloor = the farthest floor from current in the direction
+     *          findNextFloor = the closest floor from current in the direction
      *          the elevator is currently travelling that exists in
      *          buttonsPressed or requests. If no such value exists,
-     *          findNextFloor = the farthest floor from current in the opposite
+     *          findNextFloor = the closest floor from current in the opposite
      *          direction the elevator is currently travelling. ELSE
      *          findNextFloor = 1
      */
     int findNextFloorArcher();
 
     /**
-     * Moves the elevator to floor {@code target}, making stops along the way at
-     * each intermediate floor, if that floor is contained in buttonsPressed or
-     * contained in requests, given that the value in requests corresponding to
-     * that floor contains the direction the elevator is currently travelling.
+     * Moves the elevator to floor {@code target} and makes a stop at that
+     * floor.
      *
      * @param target
      *            the target floor to which to travel.
@@ -46,22 +44,6 @@ public interface Elevator extends ElevatorKernel {
      *          and target, if x mandates a stop, such stop is made.
      */
     void goToNextFloor(int target);
-
-    /**
-     * Moves the elevator to floor {@code target}, making stops along the way at
-     * each intermediate floor, if that floor is contained in buttonsPressed or
-     * contained in requests, regardless of whether or not the value in requests
-     * corresponding to that floor contains the direction the elevator is
-     * currently travelling.
-     *
-     * @param target
-     *            the target floor to which to travel.
-     * @updates this
-     * @requires 1 <= target <= topFloor
-     * @ensures currentFloor = target && for every floor x between #currentFloor
-     *          and target, if x mandates a stop, such stop is made.
-     */
-    void goToNextFloorDreese(int target);
 
     /**
      * 'stops' the elevator at its current floor. If {@code currentFloor} is in

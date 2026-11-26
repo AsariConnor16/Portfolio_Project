@@ -16,7 +16,8 @@ import components.standard.Standard;
  *   requests: map of integer and set of Direction
  *   topFloor: integer
  *   floorsTravelled : integer
- *   responseTimes : Sequence of integer
+ *   buttonResponses : Sequence of integer
+ *   requestResponses : Sequence of integer
  * }
  * @init {@code
  *   currentFloor = 1
@@ -25,7 +26,8 @@ import components.standard.Standard;
  *   requests = empty_map
  *   topFloor = 10
  *   floorsTravelled = 0
- *   responseTimes = <>
+ *   buttonResponses = <>
+ *   requestResponses = <>
  * }
  *
  * @author Connor Asari
@@ -162,25 +164,44 @@ public interface ElevatorKernel extends Standard<Elevator> {
     int getFloorsTravelled();
 
     /**
-     * Increments floorsTravelled.
-     *
+     * Adds x to floorsTravelled.
+     * 
+     * @param x
+     *            the value to add to floorsTravelled
      * @updates this
-     * @ensures floorsTravlled = #floorsTravlled + 1
+     * @ensures floorsTravlled = #floorsTravlled + x
      */
-    void incrementFloorsTravelled();
+    void addFloorsTravelled(int x);
 
     /**
-     * Returns the reponse times of the elevator.
+     * Returns the response times for buttons pressed in the elevator.
      *
-     * @return responseTimes
+     * @return buttonResponses
      */
-    Sequence<Integer> getResponseTimes();
+    Sequence<Integer> getButtonResponses();
 
     /**
-     * Adds floor floorsTravelled to the end of responseTimes
+     * Adds floor and the current value of floorsTravelled to the end of
+     * buttonResponses
      *
      * @param floor
-     *            the floor to add to responseTimes
+     *            the floor to add to buttonResponses
      */
-    void addToResponseTimes(int floor);
+    void addToButtonResponses(int floor);
+
+    /**
+     * Returns the response times for request made in the elevator.
+     *
+     * @return requestResponses
+     */
+    Sequence<Integer> getRequestResponses();
+
+    /**
+     * Adds floor and the current value of floorsTravelled to the end of
+     * requestResponses
+     *
+     * @param floor
+     *            the floor to add to requestResponses
+     */
+    void addToRequestResponses(int floor);
 }

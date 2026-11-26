@@ -66,7 +66,12 @@ public class Elevator2 extends ElevatorSecondary {
     /**
      * Pairs of floors and the floorsTravelled at the time of un-pressing.
      */
-    private Sequence<Integer> responseTimes;
+    private Sequence<Integer> buttonResponses;
+
+    /**
+     * Pairs of floors and the floorsTravelled at the time of un-requesting.
+     */
+    private Sequence<Integer> requestResponses;
 
     /**
      * Creator of initial representation.
@@ -78,7 +83,8 @@ public class Elevator2 extends ElevatorSecondary {
         this.requests = new Map1L<Integer, Set<Direction>>();
         this.topFloor = 10;
         this.floorsTravelled = 0;
-        this.responseTimes = new Sequence1L();
+        this.buttonResponses = new Sequence1L();
+        this.requestResponses = new Sequence1L();
     }
 
     /**
@@ -133,7 +139,8 @@ public class Elevator2 extends ElevatorSecondary {
         this.requests = localE.requests;
         this.topFloor = localE.topFloor;
         this.floorsTravelled = localE.floorsTravelled;
-        this.responseTimes = localE.responseTimes;
+        this.buttonResponses = localE.buttonResponses;
+        this.requestResponses = localE.requestResponses;
 
         localE.createNewRep(); //clear localE
     }
@@ -328,35 +335,61 @@ public class Elevator2 extends ElevatorSecondary {
     }
 
     /**
-     * Increments floorsTravelled.
+     * Adds x to floorsTravelled.
      *
      * @updates this
-     * @ensures floorsTravlled = #floorsTravlled + 1
+     * @ensures floorsTravlled = #floorsTravlled + x
      */
     @Override
-    public void incrementFloorsTravelled() {
-        this.floorsTravelled++;
+    public void addFloorsTravelled(int x) {
+        this.floorsTravelled += x;
     }
 
     /**
-     * Returns the reponse times of the elevator.
+     * Returns the response times for buttons pressed in the elevator.
      *
-     * @return responseTimes
+     * @return buttonResponses
      */
     @Override
-    public Sequence<Integer> getResponseTimes() {
-        return this.responseTimes;
+    public Sequence<Integer> getButtonResponses() {
+        return this.buttonResponses;
     }
 
     /**
-     * Adds floor floorsTravelled to the end of responseTimes
+     * Adds floor and the current value of floorsTravelled to the end of
+     * buttonResponses
      *
      * @param floor
-     *            the floor to add to responseTimes
+     *            the floor to add to buttonResponses
      */
-    public void addToResponseTimes(int floor) {
-        this.responseTimes.add(this.responseTimes.length(), floor);
-        this.responseTimes.add(this.responseTimes.length(),
+    @Override
+    public void addToButtonResponses(int floor) {
+        this.buttonResponses.add(this.buttonResponses.length(), floor);
+        this.buttonResponses.add(this.buttonResponses.length(),
+                this.floorsTravelled);
+    }
+
+    /**
+     * Returns the response times for request made in the elevator.
+     *
+     * @return requestResponses
+     */
+    @Override
+    public Sequence<Integer> getRequestResponses() {
+        return this.requestResponses;
+    }
+
+    /**
+     * Adds floor and the current value of floorsTravelled to the end of
+     * requestResponses
+     *
+     * @param floor
+     *            the floor to add to requestResponses
+     */
+    @Override
+    public void addToRequestResponses(int floor) {
+        this.requestResponses.add(this.requestResponses.length(), floor);
+        this.requestResponses.add(this.requestResponses.length(),
                 this.floorsTravelled);
     }
 }

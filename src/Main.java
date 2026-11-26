@@ -95,8 +95,7 @@ public class Main {
                     || e.getRequests().size() > 0) {
                 nextFloor = e.findNextFloor();
                 out.println("Elevator will travel " + e.getDirection()
-                        + " to floor " + nextFloor
-                        + ", making stops along the way if necessary");
+                        + " to floor " + nextFloor);
             } else {
                 out.println(
                         "Elevator will stay on floor " + e.getCurrentFloor());
