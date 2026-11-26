@@ -1,0 +1,370 @@
+import components.map.Map;
+import components.set.Set;
+
+/**
+ * Layered implementations of secondary methods for {@code Elevator}.
+ *
+ * @author Connor Asari
+ */
+public abstract class ElevatorSecondary implements Elevator {
+    /**
+     * Finds the next floor to which the elevator should travel next.
+     *
+     * @return the next floor to which to travel
+     * @ensures IF buttonsPressed is not empty OR requests is not empty,
+     *          findNextFloor = the farthest floor from current in the direction
+     *          the elevator is currently travelling that exists in
+     *          buttonsPressed or requests. If no such value exists,
+     *          findNextFloor = the farthest floor from current in the opposite
+     *          direction the elevator is currently travelling. ELSE
+     *          findNextFloor = currentFloor
+     */
+    @Override
+    public int findNextFloor() {
+        //assume the elevator doesn't need to go anywhere
+        int result = this.getCurrentFloor();
+
+        //get buttons pressed, requests, and direction
+        Set<Integer> buttons = this.getButtonsPressed();
+        Map<Integer, Set<Direction>> requests = this.getRequests();
+        Direction d = this.getDirection();
+
+        //if there are any buttons pressed or active requests
+        if (buttons.size() > 0 || requests.size() > 0) {
+            //if the elevator is currently travelling up,
+            if (d == Direction.UP) {
+                int maxButton = this.getTopFloor() + 1;
+                int maxRequest = this.getTopFloor() + 1;
+
+                //if there are buttons pressed, find the max button pressed
+                if (buttons.size() > 0) {
+                    maxButton = this.findNextButtonUp(buttons);
+                }
+
+                //if there are requests made, find the max floor that is being requested
+                if (requests.size() > 0) {
+                    maxRequest = this.findNextRequestUp(requests);
+                }
+
+                //set result as the higher of the 2 values
+                result = Math.min(maxButton, maxRequest);
+
+                //if result is a lower floor than current, then the elevator must
+                //travel down. Recursive call with Direction=DOWN
+                if (result < this.getCurrentFloor()
+                        || result == this.getTopFloor() + 1) {
+                    this.setDirection(Direction.DOWN); //reverse the elevator's direction
+                    result = this.findNextFloor();
+                }
+            } else {
+                int minButton = -1; //find the min button pressed
+                int minRequest = -1; //find the min floor requested
+
+                //if there are buttons pressed, find the mininimum
+                if (buttons.size() > 0) {
+                    minButton = this.findNextButtonDown(buttons);
+                }
+                //if there are any active requests, find the minimum floor requested
+                if (requests.size() > 0) {
+                    minRequest = this.findNextRequestDown(requests);
+                }
+
+                //set result as the lower of the 2 values
+                result = Math.max(minButton, minRequest);
+
+                //if result is a higher floor than current, then the elevator must
+                //travel up. Recursive call with Direction=UP
+                if (result > this.getCurrentFloor() || result == -1) {
+                    this.setDirection(Direction.UP); //reverse the elevator's direction
+                    result = this.findNextFloor();
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Finds the next floor to which the elevator should travel next.
+     *
+     * @return the next floor to which to travel
+     * @ensures IF buttonsPressed is not empty OR requests is not empty,
+     *          findNextFloor = the farthest floor from current in the direction
+     *          the elevator is currently travelling that exists in
+     *          buttonsPressed or requests. If no such value exists,
+     *          findNextFloor = the farthest floor from current in the opposite
+     *          direction the elevator is currently travelling. ELSE
+     *          findNextFloor = 1
+     */
+    @Override
+    public int findNextFloorArcher() {
+        //assume the elevator should go to floor 1
+        int result = 1;
+
+        //get buttons pressed, requests, and direction
+        Set<Integer> buttons = this.getButtonsPressed();
+        Map<Integer, Set<Direction>> requests = this.getRequests();
+        Direction d = this.getDirection();
+
+        //if there are any buttons pressed or active requests
+        if (buttons.size() > 0 || requests.size() > 0) {
+            //if the elevator is currently travelling up,
+            if (d == Direction.UP) {
+                int maxButton = 1; //find the max button pressed (inside the elevator)
+                int maxRequest = 1; //and the max floor requested (outside the elevator)
+
+                //if there are buttons pressed, find the max button pressed
+                if (buttons.size() > 0) {
+                    maxButton = this.findNextButtonUp(buttons);
+                }
+
+                //if there are requests made, find the max floor that is being requested
+                if (requests.size() > 0) {
+                    maxRequest = this.findNextRequestUp(requests);
+                }
+
+                //set result as the higher of the 2 values
+                result = Math.min(maxButton, maxRequest);
+
+                //if result is a lower floor than current, then the elevator must
+                //travel down. Recursive call with Direction=DOWN
+                if (result == this.getTopFloor() + 1) {
+                    this.setDirection(Direction.DOWN); //reverse the elevator's direction
+                    result = this.findNextFloor();
+                }
+            } else {
+                int minButton = this.getTopFloor(); //find the min button pressed
+                int minRequest = this.getTopFloor(); //find the min floor requested
+
+                //if there are buttons pressed, find the mininimum
+                if (buttons.size() > 0) {
+                    minButton = this.findNextButtonDown(buttons);
+                }
+                //if there are any active requests, find the minimum floor requested
+                if (requests.size() > 0) {
+                    minRequest = this.findNextRequestDown(requests);
+                }
+
+                //set result as the lower of the 2 values
+                result = Math.max(minButton, minRequest);
+
+                //if result is a higher flor than current, then the elevator must
+                //travel up. Recursive call with Direction=UP
+                if (result == -1) {
+                    this.setDirection(Direction.UP); //reverse the elevator's direction
+                    result = this.findNextFloor();
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Moves the elevator to floor {@code target}, making stops along the way at
+     * each intermediate floor, if that floor is contained in buttonsPressed or
+     * contained in requests, given that the value in requests corresponding to
+     * that floor contains the direction the elevator is currently travelling.
+     *
+     * @param target
+     *            the target floor to which to travel.
+     * @updates this
+     * @requires 1 <= target <= topFloor
+     * @ensures currentFloor = target && for every floor x between #currentFloor
+     *          and target, if x mandates a stop, such stop is made.
+     */
+    @Override
+    public void goToNextFloor(int target) {
+        assert 1 <= target : "Floor must be at least 1";
+        assert target <= this
+                .getTopFloor() : "Floor cannot be greater than topFloor";
+
+        //get currentFloor, buttons, and requests
+        int current = this.getCurrentFloor();
+        Set<Integer> buttons = this.getButtonsPressed();
+        Map<Integer, Set<Direction>> requests = this.getRequests();
+
+        this.setCurrentFloor(target);
+        this.addFloorsTravelled(target - current);
+
+        //if we need to travel up to get to target,
+        if (current < target) {
+            this.setDirection(Direction.UP);
+            this.stop(Direction.UP);
+        } else {
+            this.setDirection(Direction.DOWN);
+            this.stop(Direction.DOWN);
+        }
+    }
+
+    /**
+     * 'stops' the elevator at its current floor. If {@code currentFloor} is in
+     * buttonsPressed, it is removed from buttonsPressed. If
+     * {@code currentFloor} is in requests and {@code d} is in the
+     * Set<Direction> associated with {@code currentFloor}, {@code d} is removed
+     * from the Set<Direction>.
+     *
+     * @param d
+     *            direction the elevator is travelling when the stop is made
+     * @updates this
+     * @ensures !buttonsPressed.contains(currentFloor) &&
+     *          [!(requests.hasKey(currentFloor) ||
+     *          !requests.value(currentFloor).contains(d)]
+     */
+    @Override
+    public void stop(Direction d) {
+        int floor = this.getCurrentFloor();
+        Set<Integer> buttons = this.getButtonsPressed();
+        Map<Integer, Set<Direction>> requests = this.getRequests();
+
+        //if buttons contains floor, remove it
+        if (buttons.contains(floor)) {
+            this.unpressButton(floor);
+
+            //add floor and its response time to responseTimes
+            this.addToButtonResponses(floor);
+        }
+        //if requests contains floor and its Set<Direction> contains d,
+        if (requests.hasKey(floor) && requests.value(floor).contains(d)) {
+            //remove d from the Set<Direction>
+            this.unmakeRequest(floor, d);
+
+            //add floor and its response time to responseTimes
+            this.addToRequestResponses(floor);
+        }
+    }
+
+    /**
+     * Finds and returns the closest value in a Set above the value of
+     * {@code currentFloor} and below the value of {@code topFloor}. If no such
+     * values exists, returns {@code topFloor} + 1.
+     *
+     * @param s
+     *            the set of which to search
+     * @requires s /= empty_set
+     * @return the closest value above currentFloor in the set
+     */
+    private int findNextButtonUp(Set<Integer> s) {
+        assert s.size() > 0 : "ERROR: buttonsPressed cannot be empty";
+
+        int result = this.getCurrentFloor();
+        while (!s.contains(result) && result < this.getTopFloor() + 1) {
+            result++;
+        }
+        return result;
+    }
+
+    /**
+     * Finds and returns the closest value in a Set below the value of
+     * {@code currentFloor} and above 1. If no such values exists, returns -1.
+     *
+     * @param s
+     *            the set of which to search
+     * @requires s /= empty_set
+     * @return the closest value below currentFloor in the set
+     */
+    private int findNextButtonDown(Set<Integer> s) {
+        assert s.size() > 0 : "ERROR: buttonsPressed cannot be empty";
+
+        int result = this.getCurrentFloor();
+        while (!s.contains(result) && result > -1) {
+            result--;
+        }
+        return result;
+    }
+
+    /**
+     * Finds and returns the closest key in a Map above the value of
+     * {@code currentFloor} and less than {@code topFloor}. If no such values
+     * exists, returns {@code topFloor} + 1.
+     *
+     * @param m
+     *            the map of which to search
+     * @requires map /= empty_map
+     * @return the closest key value above currentFloor in the map
+     */
+    private int findNextRequestUp(Map<Integer, Set<Direction>> m) {
+        assert m.size() > 0 : "ERROR: requests cannot be empty";
+
+        //{3, DOWN}, {5, UP}
+
+        int result = this.getCurrentFloor();
+        while ((!m.hasKey(result) && result < this.getTopFloor() + 1)
+                || (m.hasKey(result)
+                        && !m.value(result).contains(Direction.UP))) {
+            result++;
+        }
+        return result;
+    }
+
+    /**
+     * Finds and returns the closest key in a Map below the value of
+     * {@code currentFloor} and above 1. If no such values exists, returns -1.
+     *
+     * @param m
+     *            the map of which to search
+     * @requires map /= empty_map
+     * @return the closest key value above currentFloor in the map
+     */
+    private int findNextRequestDown(Map<Integer, Set<Direction>> m) {
+        assert m.size() > 0 : "ERROR: requests cannot be empty";
+
+        //{3, DOWN}, {5, UP}
+
+        int result = this.getCurrentFloor();
+        while ((!m.hasKey(result) && result > -1) || (m.hasKey(result)
+                && !m.value(result).contains(Direction.DOWN))) {
+            result--;
+        }
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean result = false;
+        //if this and obj are aliases, result is true
+        if (this == obj) {
+            result = true;
+        } else if (obj == null || !(obj instanceof Elevator)) {
+            //if obj is null or obj isn't an instance of Elevator, result is false
+            result = false;
+        } else {
+            //cast obj as an Elevator
+            Elevator other = (Elevator) obj;
+            //compare all the internal variables
+            result = (this.getCurrentFloor() == other.getCurrentFloor())
+                    && (this.getDirection() == other.getDirection())
+                    && (this.getButtonsPressed()
+                            .equals(other.getButtonsPressed()))
+                    && (this.getRequests().equals(other.getRequests())
+                            && (this.getTopFloor() == other.getTopFloor())
+                            && (this.getFloorsTravelled() == other
+                                    .getFloorsTravelled())
+                            && (this.getButtonResponses()
+                                    .equals(other.getButtonResponses()))
+                            && (this.getRequestResponses()
+                                    .equals(other.getRequestResponses())));
+        }
+
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Current Floor: ").append(this.getCurrentFloor());
+        sb.append("\n");
+        sb.append("Direction Travelling: ").append(this.getDirection());
+        sb.append("\n");
+        sb.append("Buttons Pressed Inside: ").append(this.getButtonsPressed());
+        sb.append("\n");
+        sb.append("Requests: ").append(this.getRequests());
+        sb.append("\n");
+        sb.append("Top Floor: ").append(this.getTopFloor());
+        sb.append("\n");
+        sb.append("Floors Travelled: ").append(this.getFloorsTravelled());
+        sb.append("\n");
+        sb.append("Response Times: ").append(this.getButtonResponses());
+        sb.append("\n");
+        sb.append("Response Times: ").append(this.getRequestResponses());
+        return sb.toString();
+    }
+}

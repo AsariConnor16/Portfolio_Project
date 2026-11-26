@@ -6,6 +6,83 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Calendar Versioning](https://calver.org/) of
 the following form: YYYY.0M.0D.
 
+## [2026.11.26]
+
+- Changed findNextFloor implementation to find the closest floor in the
+  current direction (rather than the farthest)
+
+## [2026.11.23]
+
+- Added internal variable Sequence<Integer> responseTimes to model the time
+  it takes the elevator to 'respond' to a button press/request
+- Edited interfaces and classes to reflect the addition of the new internal
+  variable
+
+## [2026.11.20]
+
+- Added alternate implementations for findNextFloor and goToFloor in Elevator.java
+  and ElevatorSecondary.java
+- Added internal variable floorsTravelled to Elevator.
+- Added getFloorsTravelled and incrementFloorsTravelled to Kernel
+- Created Diagnostics.java file to compare the efficiencies of the different
+  implementations
+
+## [2026.11.20]
+
+- Edited findNextFloor so it handles the case where both buttonsPressed and
+  requests are empty
+
+## [2026.11.17]
+ - Created main method that allows interactive use of the Elevator component
+ - Added descriptive comments to main method
+
+## [2026.11.17]
+
+- Added internal variable topFloor used to track the top floor the elevator can
+  reach
+- Added a constructor so user can specify a top floor (it was originally hard-coded
+  as 10)
+- Edited all interfaces and classes to reflect the change
+
+## [2026.11.17]
+
+- Removed null checks from convention
+- Edited transferFrom so that it directly looks at internal variables rather
+  than calling Kernel methods to accomplish the same task
+- Renamed ElevatorAbstractClass to ElevatorSecondary to follow OSU naming conventions
+
+## [2026.11.13]
+
+- Wrote test cases for ElevatorKernel
+- Wrote test cases for Elevator
+
+## [2026.11.13]
+
+- Wrote convention and correspondence
+- Implemented Kernel methods
+- Implemented createNewRep and clear
+
+## [2026.11.11]
+
+- Completed ElevatorAbstractClass
+- Edited ElevatorKernel interface
+- Edited Elevator interface
+
+## [2026.11.11]
+
+- Completed ElevatorKernel interface
+- Complete Elevator interface
+
+## [2026.11.11]
+
+- Completed proof of concept assignment
+- Implemented some (but not all) Kernel and Secondary methods in the Elevator.MVP
+  java file
+
+## [2026.11.11]
+
+- Completed component brainstorming assignment
+
 ## [Unreleased]
 
 - Fixed an issue where the course URLs dropped the `web-sw1` paths
